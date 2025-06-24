@@ -1,0 +1,27 @@
+{
+    "libVersion": "3.8.9",
+    "projectname": "WheelV0",
+    "setting": {
+        "urlCheck": true,
+        "coverView": true,
+        "lazyloadPlaceholderEnable": false,
+        "skylineRenderEnable": false,
+        "preloadBackgroundData": false,
+        "autoAudits": false,
+        "showShadowRootInWxmlPanel": true,
+        "compileHotReLoad": false
+    },
+    "condition": {
+        "miniprogram": {
+            "list": [
+                {
+                    "name": "pages/index/index",
+                    "pathName": "pages/index/index",
+                    "query": "",
+                    "scene": null,
+                    "launchMode": "default"
+                }
+            ]
+        }
+    }
+}

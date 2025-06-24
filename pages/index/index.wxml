@@ -1,0 +1,6 @@
+<!-- index.wxml -->
+<navigation-bar title="Lucky Wheel" back="{{false}}" color="black" background="#FFF"></navigation-bar>
+<view class="container">
+  <image class="wheel" src="../../assets/wheel.png" style="transform: rotate({{angle}}deg);" mode="aspectFit"></image>
+  <button class="start-btn" bindtap="startRotate">开始</button>
+</view>
