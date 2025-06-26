@@ -1,6 +1,15 @@
 <!-- index.wxml -->
 <navigation-bar title="帮你选" back="{{false}}" color="black" background="#FFF"></navigation-bar>
-<view class="container">
-  <image class="wheel" src="../../assets/wheel.png" style="transform: rotate({{angle}}deg);" mode="aspectFit"></image>
+
+<view class="container"> 
+  <!-- 指针 -->
+  <view class="pointer-wrapper">
+    <view class="pointer"></view>
+  </view>
+  <!-- 转盘 Canvas -->
+  <canvas class="wheel-canvas" canvas-id="wheelCanvas" style="width:600rpx; height:600rpx;"></canvas>
+  <!-- 转盘图片（可选，保留以便切换） -->
+  <!-- <image class="wheel" src="../../assets/wheel.png" style="transform: rotate({{angle}}deg);" mode="aspectFit"></image> -->
+  <!-- 按键 -->
   <button class="start-btn" bindtap="startRotate">开始</button>
 </view>

@@ -1,10 +1,89 @@
 /**index.wxss**/
 page {
   height: 100vh;
+  background: #e6e6fa;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
+
 .scrollarea {
   flex: 1;
   overflow-y: hidden;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  position: relative;
+}
+
+.wheel {
+  width: 60vw;
+  max-width: 300px;
+  display: block;
+  margin: 0 auto;
+  transition: transform 3s ease;
+}
+
+.start-btn {
+  margin-top: 32rpx;
+  width: 200rpx;
+  height: 72rpx;
+  border-radius: 36rpx;
+  background: linear-gradient(90deg, #ffb347 0%, #ffcc33 100%);
+  color: #fff;
+  font-size: 32rpx;
+  font-weight: bold;
+  box-shadow: 0 8rpx 24rpx rgba(255, 204, 51, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  outline: none;
+  transition: transform 0.15s cubic-bezier(.4,0,.2,1);
+}
+
+.start-btn:active {
+  transform: scale(0.96);
+}
+
+/* 指针 */
+.pointer-wrapper {
+  position: absolute;
+  top: 400rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  width: 48rpx;
+  height: 48rpx;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.pointer {
+  width: 0;
+  height: 0;    
+  border-left: 24rpx solid transparent;
+  border-right: 24rpx solid transparent;
+  border-top: 32rpx solid #ffb347;
+}
+
+.wheel-canvas {
+  width: 600rpx;
+  height: 600rpx;
+  max-width: 90vw;
+  max-height: 90vw;
+  display: block;
+  margin-top: 0;
+  margin-bottom: 32rpx;
+  box-sizing: border-box;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 8rpx 32rpx rgba(0,0,0,0.06);
 }
