@@ -2,13 +2,21 @@
 
 Page({
   data: {
-    angle: 0
+    angle: 0,
+    prizeList: [
+      { label: "A", text: "Prize A" },
+      { label: "B", text: "Prize B" },
+      { label: "C", text: "Prize C" },
+      { label: "D", text: "Prize D" },
+      { label: "E", text: "Prize E" },
+      { label: "F", text: "Prize F" }
+    ]
   },
   onReady() {
     this.drawWheel(this.data.angle);
   },
   drawWheel(angle = 0) {
-    const prizes = ["Prize A", "Prize B", "Prize C", "Prize D", "Prize E", "Prize F"];
+    const prizes = this.data.prizeList;
     const N = prizes.length;
     const ctx = wx.createCanvasContext('wheelCanvas', this);
     const size = 156; // 600rpx / 2, canvas center
@@ -28,7 +36,7 @@ Page({
       ctx.setFillStyle(colors[i % 2]);
       ctx.fill();
       ctx.restore();
-      // Draw text
+      // Draw label only
       ctx.save();
       ctx.translate(size, size);
       ctx.rotate(sectorAngle + Math.PI / N);
@@ -36,7 +44,7 @@ Page({
       ctx.setFontSize(15);
       ctx.setTextAlign('center');
       ctx.setTextBaseline('middle');
-      ctx.fillText(prizes[i], radius * 0.7, 0);
+      ctx.fillText(prizes[i].label, radius * 0.7, 0);
       ctx.restore();
     }
     // Draw outer circle
@@ -52,16 +60,11 @@ Page({
   },
   getSelectedPrize(angle, prizes) {
     const N = prizes.length;
-    // Normalize angle to [0, 360)
-    let normalized = angle % 360;
-    if (normalized < 0) normalized += 360;
-    // Each sector covers this many degrees
     const sectorAngle = 360 / N;
-    // The pointer is at 0 deg (top), so we need to map angle to sector
-    // Since the wheel rotates clockwise, the prize at the pointer is at (360 - normalized)
-    let pointerAngle = (360 - normalized + 180 / N) % 360;
-    let index = Math.floor(pointerAngle / sectorAngle) % N + 1;
-    return prizes[index];
+    // 转盘起始位置不是prize A, 而是price E, 所以修改初始角度
+    const index = Math.floor((angle-270) % 360 / sectorAngle);
+    // 转盘不是price A-> price B->...->price F, 而是 price F-> price E...
+    return prizes[N - 1 - index];
   },
   startRotate() {
     // Reset wheel to 0 before spinning
@@ -76,7 +79,7 @@ Page({
     const totalFrames = duration / frameRate;
     const startAngle = 0;
     let frame = 0;
-    const prizes = ["Prize A", "Prize B", "Prize C", "Prize D", "Prize E", "Prize F"];
+    const prizes = this.data.prizeList;
     const animate = () => {
       frame++;
       const progress = frame / totalFrames;
@@ -92,7 +95,7 @@ Page({
         const selected = this.getSelectedPrize(targetAngle, prizes);
         wx.showModal({
           title: '完成',
-          content: `已选中：${selected}`,
+          content: `已选中：${selected.label} - ${selected.text}`,
           showCancel: false
         });
       }
@@ -103,6 +106,3 @@ Page({
     return 1 - Math.pow(1 - t, 3);
   }
 });
-
-
-
