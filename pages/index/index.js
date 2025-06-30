@@ -52,16 +52,11 @@ Page({
   },
   getSelectedPrize(angle, prizes) {
     const N = prizes.length;
-    // Normalize angle to [0, 360)
-    let normalized = angle % 360;
-    if (normalized < 0) normalized += 360;
-    // Each sector covers this many degrees
     const sectorAngle = 360 / N;
-    // The pointer is at 0 deg (top), so we need to map angle to sector
-    // Since the wheel rotates clockwise, the prize at the pointer is at (360 - normalized)
-    let pointerAngle = (360 - normalized + 180 / N) % 360;
-    let index = Math.floor(pointerAngle / sectorAngle) % N + 1;
-    return prizes[index];
+    // 转盘起始位置不是prize A, 而是price E, 所以修改初始角度
+    const index = Math.floor((angle-270) % 360 / sectorAngle);
+    // 转盘不是price A-> price B->...->price F, 而是 price F-> price E...
+    return prizes[N - 1 - index];
   },
   startRotate() {
     // Reset wheel to 0 before spinning
