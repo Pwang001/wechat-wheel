@@ -1,6 +1,23 @@
 <!-- index.wxml -->
 <navigation-bar title="帮你选" back="{{false}}" color="black" background="#FFF"></navigation-bar>
-<view class="container">
-  <image class="wheel" src="../../assets/wheel.png" style="transform: rotate({{angle}}deg);" mode="aspectFit"></image>
+
+<view class="main-fixed">
+  <!-- 转盘和指针包裹 -->
+  <view class="wheel-wrapper">
+    <view class="pointer-wrapper">
+      <view class="pointer"></view>
+    </view>
+    <canvas class="wheel-canvas" canvas-id="wheelCanvas" style="width:600rpx; height:600rpx;"></canvas>
+  </view>
+  <!-- 图例（滚动区域） -->
+  <scroll-view class="legend-scroll" scroll-y="true">
+    <view class="legend">
+      <view wx:for="{{prizeList}}" wx:key="label" class="legend-item">
+        <text class="legend-label">{{item.label}}</text>
+        <text class="legend-text">{{item.text}}</text>
+      </view>
+    </view>
+  </scroll-view>
+  <!-- 按键 -->
   <button class="start-btn" bindtap="startRotate">开始</button>
 </view>
