@@ -18,6 +18,30 @@
       </view>
     </view>
   </scroll-view>
+  <!-- 控制行 -->
+  <view class="control-row">
+    <button class="config-btn" bindtap="openPrizeConfig">✏️ 自定义选项</button>
+    <!-- <view class="history-btn-placeholder"></view> -->
+  </view>
   <!-- 按键 -->
-  <button class="start-btn" bindtap="startRotate">开始</button>
+  <button class="start-btn" bindtap="startRotate">{{buttonText}}</button>
+</view>
+
+<!-- Floating modal layer -->
+<view wx:if="{{showConfigModal}}" class="config-layer">
+  <view class="modal-mask" bindtap="handleCloseTap"></view>
+  <view class="modal-content">
+    <text class="close-icon" bindtap="handleCloseTap">✖</text>
+    <view class="prize-scroll">
+      <view wx:for="{{tempPrizeList}}" wx:key="index" class="prize-item">
+        <text class="prize-index">{{index + 1}}.</text>
+        <input class="prize-input" value="{{item.text}}" placeholder="奖项内容" bindinput="handlePrizeEdit" data-index="{{index}}" />
+        <text class="delete-icon" bindtap="handleRemovePrize" data-index="{{index}}">×</text>
+      </view>
+      <input class="prize-input" placeholder="输入奖项名称" value="{{tempPrizeText}}" bindinput="handleTextInput" />
+    </view>
+    <button class="modal-btn add-btn" bindtap="handleAddPrize">添加奖项</button>
+    <button class="modal-btn save-btn" bindtap="handleSavePrizePool">保存</button>
+    <button class="modal-btn reset-btn" bindtap="handleResetPrizePool">重置</button>
+  </view>
 </view>

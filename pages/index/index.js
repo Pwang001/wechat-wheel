@@ -4,13 +4,18 @@ Page({
   data: {
     angle: 0,
     prizeList: [
-      { label: "A", text: "Prize A" },
-      { label: "B", text: "Prize B" },
-      { label: "C", text: "Prize C" },
-      { label: "D", text: "Prize D" },
-      { label: "E", text: "Prize E" },
-      { label: "F", text: "Prize F" }
-    ]
+      { label: "1", text: "Prize 1" },
+      { label: "2", text: "Prize 2" },
+      { label: "3", text: "Prize 3" },
+      { label: "4", text: "Prize 4" },
+      { label: "5", text: "Prize 5" },
+      { label: "6", text: "Prize 6" }
+    ],
+    isSpinning: false,
+    buttonText: "开始",
+    tempPrizeText: "",
+    tempPrizeList: [],
+    showConfigModal: false
   },
   onReady() {
     this.drawWheel(this.data.angle);
@@ -55,6 +60,18 @@ Page({
     ctx.setStrokeStyle('#ffb347');
     ctx.stroke();
     ctx.restore();
+    // 在drawWheel函数中，每个奖项分界处绘制黑线
+    for (let i = 0; i < N; i++) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(size, size);
+      const angle = (2 * Math.PI / N) * i;
+      ctx.lineTo(size + radius * Math.cos(angle), size + radius * Math.sin(angle));
+      ctx.strokeStyle = '#000';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      ctx.restore();
+    }
     ctx.draw();
     ctx.restore();
   },
@@ -67,8 +84,8 @@ Page({
     return prizes[N - 1 - index];
   },
   startRotate() {
-    // Reset wheel to 0 before spinning
-    this.setData({ angle: 0 });
+    if (this.data.isSpinning) return;
+    this.setData({ isSpinning: true, buttonText: "转动中...", angle: 0 });
     this.drawWheel(0);
     const min = 1800;
     const max = 3600;
@@ -98,11 +115,84 @@ Page({
           content: `已选中：${selected.label} - ${selected.text}`,
           showCancel: false
         });
+        // Reset spinning state and button text
+        this.setData({ isSpinning: false, buttonText: "开始" });
       }
     };
     animate();
   },
   easeOutCubic(t) {
     return 1 - Math.pow(1 - t, 3);
+  },
+  openPrizeConfig() {
+    this.setData({
+      showConfigModal: true,
+      tempPrizeList: [...this.data.prizeList],
+      tempPrizeText: ''
+    });
+  },
+  handleCloseTap() {
+    if (this.data.tempPrizeText || (this.data.tempPrizeList && this.data.tempPrizeList.length > 0)) {
+      wx.showModal({
+        title: '提示',
+        content: '你有未保存的修改，是否关闭？',
+        success: (res) => {
+          if (res.confirm) {
+            this.setData({
+              showConfigModal: false,
+              tempPrizeText: '',
+              tempPrizeList: []
+            });
+          }
+        }
+      });
+    } else {
+      this.setData({ showConfigModal: false });
+    }
+  },
+  handleTextInput(e) {
+    this.setData({ tempPrizeText: e.detail.value });
+  },
+  handleAddPrize() {
+    const text = this.data.tempPrizeText.trim();
+    if (!text) return;
+    const idx = this.data.tempPrizeList.length + 1;
+    const newPrize = { label: `${idx}`, text };
+    this.setData({
+      tempPrizeList: [...this.data.tempPrizeList, newPrize],
+      tempPrizeText: ''
+    });
+  },
+  handleRemovePrize(e) {
+    const idx = e.currentTarget.dataset.index;
+    const list = [...this.data.tempPrizeList];
+    list.splice(idx, 1);
+    this.setData({ tempPrizeList: list });
+  },
+  handleSavePrizePool() {
+    let tempPrizeList = [...this.data.tempPrizeList];
+    const text = this.data.tempPrizeText.trim();
+    if (text) {
+      const idx = tempPrizeList.length + 1;
+      tempPrizeList.push({ label: `${idx}`, text });
+    }
+    this.setData({
+      prizeList: tempPrizeList,
+      tempPrizeText: '',
+      tempPrizeList: [],
+      showConfigModal: false
+    });
+    this.drawWheel(this.data.angle);
+  },
+  handleResetPrizePool() {
+    wx.showModal({
+      title: '重置奖池',
+      content: '确定要清空当前奖项吗？',
+      success: (res) => {
+        if (res.confirm) {
+          this.setData({ tempPrizeList: [], tempPrizeText: '' });
+        }
+      }
+    });
   }
 });
